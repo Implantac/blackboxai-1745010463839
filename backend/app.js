@@ -4,7 +4,7 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
-const mongoose = require('mongoose');
+const sequelize = require('./config/database');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,16 +18,17 @@ const io = new Server(server, {
 app.use(cors());
 app.use(bodyParser.json());
 
-// Database connection
-const dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/motel-management';
-mongoose.connect(dbUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('MongoDB connected');
-}).catch((err) => {
-  console.error('MongoDB connection error:', err);
-});
+// Test database connection and sync models
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Conexão com MySQL estabelecida com sucesso.');
+    await sequelize.sync();
+    console.log('Modelos sincronizados com o banco de dados.');
+  } catch (err) {
+    console.error('Erro ao conectar ou sincronizar com o banco:', err);
+  }
+})();
 
 // Socket.IO connection
 io.on('connection', (socket) => {
@@ -56,6 +57,11 @@ app.use('/api/minibar', minibarRoutes);
 app.use('/api/financial', financialRoutes);
 app.use('/api/fiscal', fiscalRoutes);
 app.use('/api/users', usersRoutes);
+
+// Root route to confirm server is running
+app.get('/', (req, res) => {
+  res.send('Backend Motel Management System está rodando.');
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
