@@ -1,23 +1,31 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const FiscalDocumentoSchema = new mongoose.Schema({
+const FiscalDocumento = sequelize.define('FiscalDocumento', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   tipoDocumento: {
-    type: String,
-    enum: ['NFC-e', 'SAT', 'CF-e'],
-    required: true,
+    type: DataTypes.ENUM('NFC-e', 'SAT', 'CF-e'),
+    allowNull: false,
   },
   dadosCupom: {
-    type: Object,
-    required: true,
+    type: DataTypes.JSON,
+    allowNull: false,
   },
   arquivoExportado: {
-    type: String,
-    default: '',
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   dataEmissao: {
-    type: Date,
-    default: Date.now,
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
+}, {
+  tableName: 'fiscal_documentos',
+  timestamps: true,
 });
 
-module.exports = mongoose.model('FiscalDocumento', FiscalDocumentoSchema);
+module.exports = FiscalDocumento;
