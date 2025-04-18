@@ -1,17 +1,25 @@
-const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
 
-const connectDB = async () => {
+const sequelize = new Sequelize(
+  process.env.MYSQL_DATABASE || 'motel_db',
+  process.env.MYSQL_USER || 'root',
+  process.env.MYSQL_PASSWORD || '',
+  {
+    host: process.env.MYSQL_HOST || 'localhost',
+    dialect: 'mysql',
+    logging: false,
+  }
+);
+
+const testConnection = async () => {
   try {
-    const dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/motel-management';
-    await mongoose.connect(dbUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
+    await sequelize.authenticate();
+    console.log('Conexão com MySQL estabelecida com sucesso.');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+    console.error('Erro ao conectar com MySQL:', error);
   }
 };
 
-module.exports = connectDB;
+testConnection();
+
+module.exports = sequelize;
