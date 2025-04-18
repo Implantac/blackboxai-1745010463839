@@ -1,32 +1,39 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const TransacaoSchema = new mongoose.Schema({
+const Transacao = sequelize.define('Transacao', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   tipo: {
-    type: String,
-    enum: ['entrada', 'saida'],
-    required: true,
+    type: DataTypes.ENUM('entrada', 'saida'),
+    allowNull: false,
   },
   valor: {
-    type: Number,
-    required: true,
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
   data: {
-    type: Date,
-    default: Date.now,
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
   descricao: {
-    type: String,
-    default: '',
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   metodoPagamento: {
-    type: String,
-    enum: ['dinheiro', 'cartao', 'pix', 'outro'],
-    default: 'dinheiro',
+    type: DataTypes.ENUM('dinheiro', 'cartao', 'pix', 'outro'),
+    defaultValue: 'dinheiro',
   },
   referenciaTEF: {
-    type: String,
-    default: '',
+    type: DataTypes.STRING,
+    allowNull: true,
   },
+}, {
+  tableName: 'transacoes',
+  timestamps: true,
 });
 
-module.exports = mongoose.model('Transacao', TransacaoSchema);
+module.exports = Transacao;
