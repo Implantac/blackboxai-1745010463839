@@ -1,27 +1,32 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const ProdutoMinibarSchema = new mongoose.Schema({
+const ProdutoMinibar = sequelize.define('ProdutoMinibar', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   nome: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   quantidade: {
-    type: Number,
-    required: true,
-    default: 0,
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
   preco: {
-    type: Number,
-    required: true,
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
   alertaReposicao: {
-    type: Number,
-    default: 5,
+    type: DataTypes.INTEGER,
+    defaultValue: 5,
   },
-  criadoEm: {
-    type: Date,
-    default: Date.now,
-  },
+}, {
+  tableName: 'produtos_minibar',
+  timestamps: true,
 });
 
-module.exports = mongoose.model('ProdutoMinibar', ProdutoMinibarSchema);
+module.exports = ProdutoMinibar;
