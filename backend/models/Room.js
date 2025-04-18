@@ -1,24 +1,28 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const RoomSchema = new mongoose.Schema({
+const Room = sequelize.define('Room', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   numero: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
   },
   status: {
-    type: String,
-    enum: ['disponivel', 'ocupado', 'manutencao'],
-    default: 'disponivel',
+    type: DataTypes.ENUM('disponivel', 'ocupado', 'manutencao'),
+    defaultValue: 'disponivel',
   },
   observacoes: {
-    type: String,
-    default: '',
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
-  criadoEm: {
-    type: Date,
-    default: Date.now,
-  },
+}, {
+  tableName: 'rooms',
+  timestamps: true,
 });
 
-module.exports = mongoose.model('Room', RoomSchema);
+module.exports = Room;
