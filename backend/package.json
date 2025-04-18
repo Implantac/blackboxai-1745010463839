@@ -1,0 +1,24 @@
+{
+  "name": "motel-management-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Motel Management System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "socket.io": "^4.6.1",
+    "dotenv": "^16.0.3",
+    "cors": "^2.8.5",
+    "express-validator": "^6.14.3",
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
