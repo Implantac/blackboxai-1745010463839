@@ -1,37 +1,56 @@
 const FiscalDocumento = require('../models/FiscalDocumento');
 
-// Generate fiscal document (stub)
-exports.generateFiscalDocument = async (req, res, next) => {
+exports.getAllDocumentos = async (req, res, next) => {
   try {
-    const { tipoDocumento, dadosCupom } = req.body;
-    // Here you would integrate with fiscal APIs or generate the document accordingly
-    const fiscalDoc = new FiscalDocumento({ tipoDocumento, dadosCupom });
-    await fiscalDoc.save();
-    res.status(201).json(fiscalDoc);
+    const documentos = await FiscalDocumento.findAll();
+    res.json(documentos);
   } catch (error) {
     next(error);
   }
 };
 
-// Get fiscal documents list
-exports.getFiscalDocuments = async (req, res, next) => {
+exports.getDocumentoById = async (req, res, next) => {
   try {
-    const docs = await FiscalDocumento.find().sort({ dataEmissao: -1 });
-    res.json(docs);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Export fiscal document by id (stub)
-exports.exportFiscalDocument = async (req, res, next) => {
-  try {
-    const doc = await FiscalDocumento.findById(req.params.id);
-    if (!doc) {
+    const documento = await FiscalDocumento.findByPk(req.params.id);
+    if (!documento) {
       return res.status(404).json({ message: 'Documento fiscal não encontrado' });
     }
-    // Stub: Return JSON, in real case generate PDF or XML for export
-    res.json(doc);
+    res.json(documento);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createDocumento = async (req, res, next) => {
+  try {
+    const newDocumento = await FiscalDocumento.create(req.body);
+    res.status(201).json(newDocumento);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateDocumento = async (req, res, next) => {
+  try {
+    const documento = await FiscalDocumento.findByPk(req.params.id);
+    if (!documento) {
+      return res.status(404).json({ message: 'Documento fiscal não encontrado' });
+    }
+    await documento.update(req.body);
+    res.json(documento);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteDocumento = async (req, res, next) => {
+  try {
+    const documento = await FiscalDocumento.findByPk(req.params.id);
+    if (!documento) {
+      return res.status(404).json({ message: 'Documento fiscal não encontrado' });
+    }
+    await documento.destroy();
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
