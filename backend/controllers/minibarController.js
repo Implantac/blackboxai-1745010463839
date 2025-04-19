@@ -55,3 +55,14 @@ exports.deleteProduto = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.consumeProduct = async (req, res, next) => {
+  try {
+    const { roomId, productId } = req.params;
+    // Implement logic to record consumption for a room
+    // This is a placeholder implementation
+    res.status(200).json({ message: `Consumo do produto ${productId} registrado para o quarto ${roomId}` });
+  } catch (error) {
+    next(error);
+  }
+};
